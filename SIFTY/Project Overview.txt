@@ -1,0 +1,178 @@
+Allows you to go to review posts and SIFT through comments.
+
+A webapp that takes reddit post URLs as input, summarizes the initial post, 
+and condenses/summarizes comments so people can get a general consensus on said post. 
+
+Checkboxes:
+-Consensus condensed
+-include most upvoted comment, or exclude
+-include most downvoted comment or exclude
+-Option to scrape user data for fake or untruthful reviews (look for comment or post karma, account age)
+
+The sorting criteria can change based on user input:
+-Overall consensus
+-Most repeated phrases
+-Keywords/phrases
+-Username
+
+Project Overview
+Your webpage will:
+
+Accept Reddit post links as input.
+Fetch the comments and commenters' account details from the Reddit API.
+Sort and display the data based on your chosen criteria (e.g., comment karma, account age, etc.).
+Steps to Build the Webpage
+
+	1. Set Up the Development Environment
+Choose a tech stack:
+Frontend: HTML, CSS, JavaScript (or a framework like React).
+Backend: Node.js, Python (Flask/Django/FastAPI), or similar.
+Database: (Optional) SQLite or MongoDB if you need to store data.
+Install necessary tools:
+Node.js for JavaScript backend.
+Python and pip for Python backend.
+
+	2. Register a Reddit API Application
+Go to Reddit Developer Portal.
+Create an app and get the client ID and secret.
+
+	3. Fetch Reddit Data
+Use the Reddit API or a wrapper library:
+Python: praw.
+JavaScript: snoowrap.
+Example Python snippet to fetch comments:
+python
+Copy code
+________________________________________________________
+import praw
+
+reddit = praw.Reddit(
+    client_id="YOUR_CLIENT_ID",
+    client_secret="YOUR_CLIENT_SECRET",
+    user_agent="YOUR_APP_NAME"
+)
+submission = reddit.submission(url="REDDIT_POST_LINK")
+for comment in submission.comments.list():
+    print(comment.body, comment.author.name)
+	______________________________________________________
+
+4. Process the Data
+Extract details like:
+Comment text.
+Commenter's username.
+Karma, account age, etc., from user profiles.
+Use sorting algorithms or libraries to organize data.
+
+5. Build the Webpage
+Frontend:
+Create an input field for the Reddit post link.
+Display results in a table or cards.
+Backend:
+Create an API endpoint to process the link and return sorted data.
+Use frameworks like Flask/Express.js to handle requests.
+
+>>>>>Example API design:
+
+POST /fetch_comments → Accepts a Reddit post link, fetches and sorts data, returns JSON.
+6. Display Data
+Use JavaScript (or a library like React) to dynamically show sorted data on the webpage.
+Add filters or sorting options (e.g., sort by comment length, karma, etc.).
+7. Deployment
+Host your webpage on platforms like:
+Frontend: Netlify, Vercel.
+Backend: Heroku, AWS, or Render.
+Ensure you handle API rate limits from Reddit.
+Would you like help with any specific part, like backend code, API integration, or webpage design? 😊
+
+
+
+
+
+
+You said:
+This is correct, and it would also need to have the option to search the post for repeated or similar phrases, and if the post is a review post, it should be able to give a summarized version of the commenters' reviews.
+ChatGPT said:
+ChatGPT
+Great! These additional features make the project even more exciting. Here's how you can expand the functionality to include these features:
+
+Additional Features
+1. Search for Repeated or Similar Phrases
+Objective: Identify frequently repeated or similar phrases in the comments to detect common topics or sentiments.
+
+Implementation Steps:
+
+Text Preprocessing:
+Remove punctuation, stop words, and convert text to lowercase.
+Tokenize the comments into words or phrases.
+Phrase Frequency Analysis:
+Use a library like collections.Counter (Python) or similar in JavaScript.
+Identify n-grams (e.g., two- or three-word phrases) using tools like nltk (Python) or regex patterns.
+Similarity Detection:
+Use a text similarity metric like cosine similarity (via TF-IDF vectors) or Levenshtein distance.
+Libraries:
+Python: scikit-learn, fuzzywuzzy.
+JavaScript: string-similarity.
+Output:
+
+Show a list of frequently repeated phrases with counts or similarity scores.
+Highlight phrases in comments where they appear.
+2. Summarize Review Comments
+Objective: Provide a concise summary of the sentiment or key points from review-type comments.
+
+Implementation Steps:
+
+Comment Categorization:
+Use keyword-based detection to filter review-related comments (e.g., look for "I think," "in my opinion," "review," etc.).
+Alternatively, use sentiment analysis to focus on subjective comments.
+Summarization:
+Extractive Summarization:
+Highlight key sentences using TextRank or similar algorithms.
+Python libraries: sumy, spaCy, or gensim.
+Abstractive Summarization:
+Generate concise summaries using models like OpenAI's GPT-3.5 or Hugging Face models (e.g., BART, T5).
+Sentiment Analysis:
+Provide an overall sentiment score for the reviews (positive, negative, or neutral).
+Libraries:
+Python: nltk, TextBlob, VADER.
+JavaScript: Sentiment.
+Output:
+
+Display a summary paragraph for the post, listing pros and cons based on keywords and sentiment.
+Webpage Enhancements
+Frontend
+Add a phrase search field with options to filter results by:
+Specific keywords.
+Minimum similarity score.
+Add a review summarization button to display:
+A summarized version of the reviews.
+A sentiment chart (bar or pie chart) using a library like Chart.js or D3.js.
+Backend
+Create additional API endpoints:
+POST /search_phrases → Accepts a phrase or similarity threshold, returns matches.
+POST /summarize_reviews → Returns summarized reviews and sentiment analysis.
+Database (Optional)
+Store processed data (e.g., frequent phrases, summaries) for faster retrieval if the same post is analyzed again.
+
+Example Code Snippets
+
+Phrase Frequency Analysis in Python
+python
+Copy code
+from collections import Counter
+from nltk import ngrams
+
+def get_frequent_phrases(comments, n=2):
+    all_phrases = []
+    for comment in comments:
+        tokens = comment.lower().split()
+        all_phrases.extend(ngrams(tokens, n))
+    return Counter(all_phrases).most_common(10)
+Summarizing Reviews Using Hugging Face
+python
+Copy code
+from transformers import pipeline
+
+summarizer = pipeline("summarization")
+comments = " ".join(review_comments)  # Combine review comments
+summary = summarizer(comments, max_length=50, min_length=10, do_sample=False)
+print(summary[0]['summary_text'])

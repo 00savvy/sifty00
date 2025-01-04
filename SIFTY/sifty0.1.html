@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Comment Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Reddit Comment Analyzer</h1>
+        <nav>
+            <a href="#analyze">Analyze</a>
+            <a href="#features">Features</a>
+            <a href="#about">About</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Input Section -->
+        <section id="input-section">
+            <h2>Analyze Reddit Post</h2>
+            <form id="reddit-form">
+                <label for="reddit-url">Enter Reddit Post URL:</label>
+                <input type="url" id="reddit-url" placeholder="https://www.reddit.com/r/...">
+                <button type="submit">Analyze</button>
+            </form>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results-section">
+            <h2>Results</h2>
+            <!-- Comment Analysis -->
+            <div id="comment-analysis">
+                <h3>Comment Analysis</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Karma</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comment-table">
+                        <!-- Data will be dynamically populated -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phrase Search -->
+            <div id="phrase-search">
+                <h3>Frequent or Similar Phrases</h3>
+                <ul id="phrase-results">
+                    <!-- Results will appear here -->
+                </ul>
+            </div>
+
+            <!-- Review Summary -->
+            <div id="review-summary">
+                <h3>Review Summary</h3>
+                <p id="summary-text">Summary will appear here...</p>
+                <canvas id="sentiment-chart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Reddit Comment Analyzer</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
