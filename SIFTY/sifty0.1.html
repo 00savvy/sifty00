@@ -1,5 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: #282c34;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+header nav a {
+    margin: 0 1rem;
+    color: white;
+    text-decoration: none;
+}
+
+header nav a:hover {
+    text-decoration: underline;
+}
+
+main {
+    padding: 2rem;
+}
+
+section {
+    margin: 2rem 0;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+input, button {
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+}
+
+table th {
+    background: #f4f4f4;
+}
+
+canvas {
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 600px;
+}
+</style>
+
+
+<script>
+/* script.js */
+
+// Handle form submission
+document.getElementById('reddit-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const url = document.getElementById('reddit-url').value;
+
+    if (!url) {
+        alert('Please enter a valid Reddit post URL.');
+        return;
+    }
+
+    // Example API call (replace with your backend endpoint)
+    const response = await fetch('/fetch_comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url }),
+    });
+
+    const data = await response.json();
+
+    // Populate comments
+    const commentTable = document.getElementById('comment-table');
+    commentTable.innerHTML = data.comments
+        .map(comment => `
+            <tr>
+                <td>${comment.username}</td>
+                <td>${comment.karma}</td>
+                <td>${comment.text}</td>
+            </tr>
+        `).join('');
+
+    // Populate phrases
+    const phraseResults = document.getElementById('phrase-results');
+    phraseResults.innerHTML = data.phrases
+        .map(phrase => `<li>${phrase.text} (${phrase.count})</li>`)
+        .join('');
+
+    // Populate summary
+    document.getElementById('summary-text').innerText = data.summary;
+
+    // Populate sentiment chart (example using Chart.js)
+    const ctx = document.getElementById('sentiment-chart').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Positive', 'Negative', 'Neutral'],
+            datasets: [{
+                data: data.sentiment,
+                backgroundColor: ['#4caf50', '#f44336', '#ffeb3b'],
+            }],
+        },
+    });
+});
+</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
