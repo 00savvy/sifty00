@@ -1,1 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
 
+header {
+    background: #282c34;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+header nav a {
+    margin: 0 1rem;
+    color: white;
+    text-decoration: none;
+}
+
+header nav a:hover {
+    text-decoration: underline;
+}
+
+main {
+    padding: 2rem;
+}
+
+section {
+    margin: 2rem 0;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+input, button {
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+}
+
+table th {
+    background: #f4f4f4;
+}
+
+canvas {
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 600px;
+}
+</style>
+
+
+<script>
+/* script.js */
+
+// Handle form submission
+document.getElementById('reddit-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const url = document.getElementById('reddit-url').value;
+
+    if (!url) {
+        alert('Please enter a valid Reddit post URL.');
+        return;
+    }
+
+    // Example API call (replace with your backend endpoint)
+    const response = await fetch('/fetch_comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url }),
+    });
+
+    const data = await response.json();
+
+    // Populate comments
+    const commentTable = document.getElementById('comment-table');
+    commentTable.innerHTML = data.comments
+        .map(comment => `
+            <tr>
+                <td>${comment.username}</td>
+                <td>${comment.karma}</td>
+                <td>${comment.text}</td>
+            </tr>
+        `).join('');
+
+    // Populate phrases
+    const phraseResults = document.getElementById('phrase-results');
+    phraseResults.innerHTML = data.phrases
+        .map(phrase => `<li>${phrase.text} (${phrase.count})</li>`)
+        .join('');
+
+    // Populate summary
+    document.getElementById('summary-text').innerText = data.summary;
+
+    // Populate sentiment chart (example using Chart.js)
+    const ctx = document.getElementById('sentiment-chart').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Positive', 'Negative', 'Neutral'],
+            datasets: [{
+                data: data.sentiment,
+                backgroundColor: ['#4caf50', '#f44336', '#ffeb3b'],
+            }],
+        },
+    });
+});
+</script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Comment Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Reddit Comment Analyzer</h1>
+        <nav>
+            <a href="#analyze">Analyze</a>
+            <a href="#features">Features</a>
+            <a href="#about">About</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Input Section -->
+        <section id="input-section">
+            <h2>Analyze Reddit Post</h2>
+            <form id="reddit-form">
+                <label for="reddit-url">Enter Reddit Post URL:</label>
+                <input type="url" id="reddit-url" placeholder="https://www.reddit.com/r/...">
+                <button type="submit">Analyze</button>
+            </form>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results-section">
+            <h2>Results</h2>
+            <!-- Comment Analysis -->
+            <div id="comment-analysis">
+                <h3>Comment Analysis</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Karma</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comment-table">
+                        <!-- Data will be dynamically populated -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phrase Search -->
+            <div id="phrase-search">
+                <h3>Frequent or Similar Phrases</h3>
+                <ul id="phrase-results">
+                    <!-- Results will appear here -->
+                </ul>
+            </div>
+
+            <!-- Review Summary -->
+            <div id="review-summary">
+                <h3>Review Summary</h3>
+                <p id="summary-text">Summary will appear here...</p>
+                <canvas id="sentiment-chart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Reddit Comment Analyzer</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
