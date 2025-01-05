@@ -86,14 +86,16 @@ canvas {
     <!-- Main Content -->
     <main>
 <section id="input-section">
-    <h2>Analyze Reddit Post</h2>
-    <form id="reddit-form">
-        <label for="reddit-url">Enter Reddit Post URL:</label>
-        <input type="url" id="reddit-url" placeholder="https://www.reddit.com/r/..." required>
-        <button type="submit">Analyze</button>
-    </form>
-    <div id="loading" style="display:none;">Loading...</div>
+  <h2>Analyze Reddit Post</h2>
+  <form id="reddit-form">
+    <label for="reddit-url">Enter Reddit Post URL:</label>
+    <input type="url" id="reddit-url" placeholder="https://www.reddit.com/r/..." required>
+    <button type="submit">Analyze</button>
+  </form>
+  <div id="results"></div>
 </section>
+
+<script src="script.js"></script> <!-- Link your JavaScript file -->
 
 <script type="module">
     import { analyzeRedditPost } from './redditAnalyzer.js';
