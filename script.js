@@ -2,14 +2,48 @@
 /* script.js */
 
 // Handle form submission
-document.getElementById('reddit-form').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const url = document.getElementById('reddit-url').value;
+document.getElementById("reddit-form").addEventListener("submit", async (event) => {
+  event.preventDefault(); // Prevent form submission
 
-    if (!url) {
-        alert('Please enter a valid Reddit post URL.');
-        return;
+  const urlInput = document.getElementById("reddit-url").value; // Get the URL input
+  const resultsDiv = document.getElementById("results");
+
+  // Clear previous results
+  resultsDiv.innerHTML = "Analyzing...";
+
+  try {
+    // Send the Reddit URL to the backend
+    const response = await fetch("http://localhost:3000/analyze", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ url: urlInput }),
+    });
+
+    // Handle response
+    if (!response.ok) {
+      throw new Error("Failed to fetch data. Please try again.");
     }
+
+    const data = await response.json();
+
+    // Display results
+    resultsDiv.innerHTML = `
+      <h3>Results:</h3>
+      <p><strong>Title:</strong> ${data.title}</p>
+      <p><strong>Subreddit:</strong> ${data.subreddit}</p>
+      <p><strong>Author:</strong> ${data.author}</p>
+      <h4>Comments:</h4>
+      <ul>
+        ${data.comments.map((comment) => `<li>${comment}</li>`).join("")}
+      </ul>
+    `;
+  } catch (error) {
+    console.error(error);
+    resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+  }
+});
 
     // Example API call (replace with your backend endpoint)
     const response = await fetch('/fetch_comments', {
