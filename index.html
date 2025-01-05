@@ -85,15 +85,26 @@ canvas {
 
     <!-- Main Content -->
     <main>
-        <!-- Input Section -->
-        <section id="input-section">
-            <h2>Analyze Reddit Post</h2>
-            <form id="reddit-form">
-                <label for="reddit-url">Enter Reddit Post URL:</label>
-                <input type="url" id="reddit-url" placeholder="https://www.reddit.com/r/...">
-                <button type="submit">Analyze</button>
-            </form>
-        </section>
+<section id="input-section">
+    <h2>Analyze Reddit Post</h2>
+    <form id="reddit-form">
+        <label for="reddit-url">Enter Reddit Post URL:</label>
+        <input type="url" id="reddit-url" placeholder="https://www.reddit.com/r/..." required>
+        <button type="submit">Analyze</button>
+    </form>
+    <div id="loading" style="display:none;">Loading...</div>
+</section>
+
+<script type="module">
+    import { analyzeRedditPost } from './redditAnalyzer.js';
+
+    document.getElementById('reddit-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const url = document.getElementById('reddit-url').value;
+        analyzeRedditPost(url);
+    });
+</script>
 
         <!-- Results Section -->
         <section id="results-section">
